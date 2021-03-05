@@ -1,5 +1,5 @@
 # my_ai_engine
-参考pytorch和tensorflow，自己用c++搭的一个深度学习框架，自学用  
+参考pytorch和tensorflow，自己用c++搭的一个深度学习框架，自学用，下载后把工程目录改名为pytorch_v4
 ## 主要逻辑：  
 任何函数都可以表示为计算图：  
 ![image](https://github.com/jklp2/my_ai_engine/blob/main/1.png)  

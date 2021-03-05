@@ -294,6 +294,22 @@ public:
         return ret;
     }
 };
+//绝对值
+class ABS:public Module{
+public:
+    tensor* forward(vector<tensor *> x){
+        isbuild=true;
+        grad_fn.resize(x.size());
+        input = x;
+        ret = new tensor();
+        ret->data = input[0]->data>0 ? input[0]->data:-input[0]->data;
+        grad_fn[0]=input[0]->data>0 ? 1:-1;
+        input[0]->cnt++;
+        input[0]->cnt_free++;
+        ret->hook=this;
+        return ret;
+    }
+};
 //外部加法
 tensor* ad(tensor *a, tensor *b){
     Module *op=new add();
@@ -366,5 +382,11 @@ tensor* Oppo(vector<tensor *> x){
 tensor* inverse(vector<tensor *> x){
     Module *op = new INVERSE();
     return op->forward(x);
+}
+
+//外部Abs test
+tensor* Abs(tensor *a){
+    Module *op = new ABS();
+    return op->forward({a});
 }
 #endif //PYTORCH_V4_MODULE_H

@@ -27,4 +27,24 @@ public:
         return ret;
     }
 };
+
+
+class L1LOSS{
+public:
+    tensor* forward(vector<vector<tensor*>> x, vector<vector<tensor*>> y){
+        tensor* ret=NULL;
+        int m=x.size(),n=x[0].size();
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(!ret)
+                    ret=Abs(su(x[i][j], y[i][j]));
+                else
+                    ret=ad(ret,Abs(su(x[i][j], y[i][j])));
+            }
+        }
+        ret = di(ret,m*n);
+        loss_init(ret);
+        return ret;
+    }
+};
 #endif //PYTORCH_V4_LOSS_H

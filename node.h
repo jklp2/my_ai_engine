@@ -11,14 +11,23 @@
 
 class node{
 public:
+    static int node_cnt; //检查有无内存泄露
     tensor* ret;  //模型的输出
     vector<tensor*> input; //模型的输入
     vector<double> grad_fn; //输出对输入的导数，在forward时计算。
     bool isbuild;  //
-    node():isbuild(false){}
+    node():isbuild(false){node_cnt++;}
     virtual tensor* forward(vector<tensor*> x){return NULL;}
     virtual tensor* forward(vector<tensor*> x, double q){return NULL;}
-    virtual ~node(){ret->cnt_free--;ret->hook=NULL;if(ret->cnt_free==0)delete ret;}
+    virtual ~node(){
+//        ret->cnt_free--; //记录被释放几次
+//        cout<<ret->cnt_free<<" ";
+        ret->hook=NULL;
+
+//        if(ret->cnt_free<=0) //因为最后输出不会作为其他输入，所以可能有负数的情况
+        delete ret;
+        node_cnt--;
+    }
     virtual void backward(){  //把ret的梯度传向input
         if(!isbuild)  //如果没有forward，无法传梯度。
             throw "backward before forward!";
@@ -29,6 +38,7 @@ public:
         }
     }
 };
+
 
 //module中的成员定义完成，可以定义tensor的backward
 void tensor::backward(){
@@ -44,13 +54,13 @@ void tensor::backward(){
 
 //释放计算图，逻辑和backward类似
 void tensor::free(){
-    if(!hook)
+    if(!hook||cnt_free!=0)
         return;
-    hook->backward();
     vector<tensor*> tt=hook->input;
     delete hook;
     hook=NULL; //hook置空可以防止某一节点被delete多次。
     for(tensor *x:tt){
+        x->cnt_free--;
         x->free();
     }
 }

@@ -14,6 +14,7 @@ class node;
 
 class tensor{
 public:
+    static int tensor_cnt;//检查有无内存泄露
     double data,grad;
     //cnt,cnt_free都用来记录该tensor是多少个节点的输入,其中cnt是用来反向传播时判断该tensor的梯度是已完成计算,而cnt_free是用来析构node时释放内存时避免指针重复delete的计数。
     int cnt,cnt_free;
@@ -22,9 +23,10 @@ public:
     void zerograd();
     void free();
     void print(){cout<<data<<endl;}
-    tensor(double d=0, double g=0, int c=0): data(d), grad(g), cnt(0), cnt_free(0), hook(NULL){}
-    tensor(tensor &x): data(x.data), grad(x.grad), cnt(x.cnt), cnt_free(x.cnt_free), hook(x.hook){}
-    tensor(tensor &&x): data(x.data), grad(x.grad), cnt(x.cnt), cnt_free(x.cnt_free), hook(x.hook){}
+    tensor(double d=0, double g=0, int c=0): data(d), grad(g), cnt(0), cnt_free(0), hook(NULL){tensor_cnt++;}
+    tensor(tensor &x): data(x.data), grad(x.grad), cnt(x.cnt), cnt_free(x.cnt_free), hook(x.hook){tensor_cnt++;}
+    tensor(tensor &&x): data(x.data), grad(x.grad), cnt(x.cnt), cnt_free(x.cnt_free), hook(x.hook){tensor_cnt++;}
+    ~tensor(){tensor_cnt--;}
 };
 
 //外部backward函数
@@ -91,6 +93,37 @@ void print_grad(vector<vector<tensor *>> w){
     for(int i=0;i<w.size();i++){
         for(int j=0;j<w[0].size();j++){
             cout<<w[i][j]->grad<<" ";
+        }
+        cout<<endl;
+    }
+//    for(int i=0;i<w.size();i++){
+//        for(int j=0;j<w[0].size();j++){
+//            cout<<w[i][j]->grad<<" ";
+//        }
+//        cout<<endl;
+//    }
+}
+
+
+void print_cnt(vector<vector<tensor *>> w){
+    for(int i=0;i<w.size();i++){
+        for(int j=0;j<w[0].size();j++){
+            cout<<w[i][j]->cnt<<" ";
+        }
+        cout<<endl;
+    }
+//    for(int i=0;i<w.size();i++){
+//        for(int j=0;j<w[0].size();j++){
+//            cout<<w[i][j]->grad<<" ";
+//        }
+//        cout<<endl;
+//    }
+}
+
+void print_cnt_free(vector<vector<tensor *>> w){
+    for(int i=0;i<w.size();i++){
+        for(int j=0;j<w[0].size();j++){
+            cout<<w[i][j]->cnt_free<<" ";
         }
         cout<<endl;
     }

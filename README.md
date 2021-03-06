@@ -1,5 +1,7 @@
 # my_ai_engine
-参考pytorch和tensorflow，自己用c++搭的一个深度学习框架，自学用，下载后把工程目录改名为pytorch_v4
+参考pytorch和tensorflow，自己用c++搭的一个深度学习框架，自学用，下载后把工程目录改名为pytorch_v4  
+## 特性：  
+可以实现动态网络搭建，自动梯度求解，自动回收内存等主流深度学习框架的核心功能。
 ## 主要逻辑：  
 任何函数都可以表示为计算图：  
 ![image](https://github.com/jklp2/my_ai_engine/blob/main/1.png)  

@@ -4,7 +4,7 @@
 
 #ifndef PYTORCH_V4_ACTIVATE_H
 #define PYTORCH_V4_ACTIVATE_H
-#include "module.h"
+#include "node.h"
 class activate{
 public:
     virtual vector<vector<tensor *>> forward(vector<vector<tensor *>>)=0;

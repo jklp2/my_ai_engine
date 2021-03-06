@@ -1,7 +1,8 @@
 #include <iostream>
 #include "torch.h"
-//定义模型
-class mynet: public net{
+//demo模型,两层mlp，中间激活函数是sigmoid
+
+class mynet: public module{
 public:
     linear l1, l2;
     Sigmoid ac;
@@ -32,7 +33,7 @@ int main() {
     optimizer G;
     G.reg({net1.get_parameters()});
     MSELOSS loss_fn;
-    for(int i=0;i<150000;i++){
+    for(int i=0;i<500000;i++){
         auto output = net1.forward(input);  //正向传播，同时记算grad_fn
         auto loss = loss_fn.forward(output,target); //计算loss
         backward(loss); //从loss反向传播,计算grad
@@ -42,6 +43,7 @@ int main() {
             print(output);
             printf("target:\n");
             print(target);
+//            print_grad(net1.l2.w);
         }
         G.step(0.1); //用grad更新parameter的data
         zerograd(loss);  //从loss开始反向将所有节点grad置零

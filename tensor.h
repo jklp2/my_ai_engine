@@ -10,14 +10,14 @@
 
 
 using namespace std;
-class Module;
+class node;
 
 class tensor{
 public:
     double data,grad;
-    //cnt,cnt_free都用来记录该tensor是被在多少个module里作为输入,其中cnt是用来反向传播时判断该tensor的梯度是已完成计算,而cnt_free是用来析构module时释放内存时避免指针重复delete的计数。
+    //cnt,cnt_free都用来记录该tensor是多少个节点的输入,其中cnt是用来反向传播时判断该tensor的梯度是已完成计算,而cnt_free是用来析构node时释放内存时避免指针重复delete的计数。
     int cnt,cnt_free;
-    Module *hook;
+    node *hook;
     void backward();
     void zerograd();
     void free();
@@ -87,6 +87,20 @@ void print(vector<vector<tensor *>> w){
 //    }
 }
 
+void print_grad(vector<vector<tensor *>> w){
+    for(int i=0;i<w.size();i++){
+        for(int j=0;j<w[0].size();j++){
+            cout<<w[i][j]->grad<<" ";
+        }
+        cout<<endl;
+    }
+//    for(int i=0;i<w.size();i++){
+//        for(int j=0;j<w[0].size();j++){
+//            cout<<w[i][j]->grad<<" ";
+//        }
+//        cout<<endl;
+//    }
+}
 
 //外部快速生成tensor指针
 tensor* T(double a){

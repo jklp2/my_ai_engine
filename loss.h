@@ -4,9 +4,9 @@
 
 #ifndef PYTORCH_V4_LOSS_H
 #define PYTORCH_V4_LOSS_H
-#include "net.h"
+#include "module.h"
 
-class Loss:public net{
+class Loss:public module{
 
 };
 class MSELOSS{

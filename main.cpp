@@ -1,6 +1,6 @@
 #include <iostream>
-#include "torch.h"
-//demoÄ£ÐÍ,Á½²ãmlp£¬ÖÐ¼ä¼¤»îº¯ÊýÊÇsigmoid
+#include "torch.hpp"
+//demoÄ£ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½mlpï¿½ï¿½ï¿½Ð¼ä¼¤ï¿½îº¯ï¿½ï¿½ï¿½ï¿½sigmoid
 int node::node_cnt=0;
 int tensor::tensor_cnt=0;
 class mynet: public module{
@@ -17,7 +17,7 @@ public:
 //        print_cnt_free(h1);
         return output;
     }
-    //¼ÇÂ¼Ä£ÐÍ²ÎÊý
+    //ï¿½ï¿½Â¼Ä£ï¿½Í²ï¿½ï¿½ï¿½
     vector<tensor*> get_parameters(){
         auto l1_p=l1.get_parameters(),l2_p=l2.get_parameters();
         vector<tensor*> ans;
@@ -30,9 +30,9 @@ public:
 };
 
 int main() {
-    auto input = T({{0.1,0.2},{0.3,0.4},{0.7,0.2}}); //ÊäÈëÀý×Ó
+    auto input = T({{0.1,0.2},{0.3,0.4},{0.7,0.2}}); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-    auto target = T({{2,4},{1,5},{3,2}});  //±êÇ©Àý×Ó
+    auto target = T({{2,4},{1,5},{3,2}});  //ï¿½ï¿½Ç©ï¿½ï¿½ï¿½ï¿½
     mynet net1;
 
     optimizer G;
@@ -40,15 +40,15 @@ int main() {
     MSELOSS loss_fn;
     cout<<tensor::tensor_cnt<<endl;
     for(int i=0;i<1000000;i++){
-        auto output = net1.forward(input);  //ÕýÏò´«²¥£¬Í¬Ê±¼ÇËãgrad_fn
-//        cout<<node::node_cnt<<endl;//¼ì²éÓÐÎÞÄÚ´æÐ¹Â¶
-//        cout<<tensor::tensor_cnt<<endl;//¼ì²éÓÐÎÞÄÚ´æÐ¹Â¶
+        auto output = net1.forward(input);  //ï¿½ï¿½ï¿½ò´«²ï¿½ï¿½ï¿½Í¬Ê±ï¿½ï¿½ï¿½ï¿½grad_fn
+//        cout<<node::node_cnt<<endl;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ð¹Â¶
+//        cout<<tensor::tensor_cnt<<endl;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ð¹Â¶
 
 //        print_cnt_free(net1.l2.w);
-        auto loss = loss_fn.forward(output,target); //¼ÆËãloss
+        auto loss = loss_fn.forward(output,target); //ï¿½ï¿½ï¿½ï¿½loss
 //        cout<<tensor::tensor_cnt<<endl;
-        backward(loss); //´Óloss·´Ïò´«²¥,¼ÆËãgrad
-        if(i%2000==0) { //¼àÊÓloss
+        backward(loss); //ï¿½ï¿½lossï¿½ï¿½ï¿½ò´«²ï¿½,ï¿½ï¿½ï¿½ï¿½grad
+        if(i%2000==0) { //ï¿½ï¿½ï¿½ï¿½loss
             printf("iter:%d loss:%f\n", i, loss->data);
             printf("pred:\n");
             print(output);
@@ -56,12 +56,12 @@ int main() {
             print(target);
 //            print_grad(net1.l2.w);
         }
-        G.step(0.2); //ÓÃgrad¸üÐÂparameterµÄdata
-        zerograd(loss);  //´Óloss¿ªÊ¼·´Ïò½«ËùÓÐ½ÚµãgradÖÃÁã
-        free(loss);//ÊÍ·Å¼ÆËãÍ¼£¬deleteËùÓÐµÄ½Úµã(module *),tensor
+        G.step(0.2); //ï¿½ï¿½gradï¿½ï¿½ï¿½ï¿½parameterï¿½ï¿½data
+        zerograd(loss);  //ï¿½ï¿½lossï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð½Úµï¿½gradï¿½ï¿½ï¿½ï¿½
+        free(loss);//ï¿½Í·Å¼ï¿½ï¿½ï¿½Í¼ï¿½ï¿½deleteï¿½ï¿½ï¿½ÐµÄ½Úµï¿½(module *),tensor
 //        print_cnt_free(net1.l2.w);
-//        cout<<node::node_cnt<<endl;//¼ì²éÓÐÎÞÄÚ´æÐ¹Â¶
-//        cout<<tensor::tensor_cnt<<endl;//¼ì²éÓÐÎÞÄÚ´æÐ¹Â¶
+//        cout<<node::node_cnt<<endl;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ð¹Â¶
+//        cout<<tensor::tensor_cnt<<endl;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ð¹Â¶
     }
     return 0;
 }
